@@ -29,7 +29,10 @@ export function App() {
 
   return (
     <main className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-semibold mb-4">Tasmin</h1>
+      <div className="flex items-center gap-2 mb-4">
+        <img src="/favicon.svg" alt="" className="w-8 h-8" />
+        <h1 className="text-2xl font-semibold">Tasmin</h1>
+      </div>
 
       <nav className="flex gap-2 mb-4 border-b">
         {(Object.keys(TAB_LABELS) as Tab[]).map((t) => (

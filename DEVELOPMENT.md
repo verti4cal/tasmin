@@ -131,3 +131,29 @@ the box, which is a deliberate size tradeoff (~1GB+, and PlatformIO will
 download additional toolchains per environment on first use of that
 environment). If you only want device management and don't need the
 compiler, skip installing those packages in a local Dockerfile fork.
+
+## Releasing a new image
+
+Pushing a tag matching `v*.*.*` (e.g. `v1.2.3`) triggers
+[`.github/workflows/docker-release.yml`](.github/workflows/docker-release.yml),
+which builds the production `Dockerfile` for `linux/amd64` and `linux/arm64`
+and pushes it to GHCR as `ghcr.io/verti4cal/tasmin`, tagged `1.2.3`, `1.2`,
+`1`, and `latest`.
+
+```bash
+git tag v1.2.3
+git push origin v1.2.3
+```
+
+Ordinary commits/pushes to `main` don't publish anything — only a matching
+tag does. The workflow can also be re-run manually from the Actions tab
+(`workflow_dispatch`); pick the tag from the "Use workflow from" ref
+selector to rebuild/republish an existing release.
+
+**First release only:** GHCR packages are private by default when first
+published via the repo's own `GITHUB_TOKEN`. After the first successful run,
+go to the package's page (linked from the repo sidebar under "Packages") and
+set its visibility to public if you want `docker pull` to work without
+authenticating. Also confirm the repo's Settings → Actions → General →
+"Workflow permissions" is set to "Read and write permissions" — otherwise
+the push step fails with a 403/denied error.

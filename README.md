@@ -44,6 +44,34 @@ make start                           # equivalent to: docker compose up --build 
 Open **http://localhost:3000**. That's it — the container serves both the
 web UI and the API on one port.
 
+Prefer not to build locally? Every tagged release is published to
+`ghcr.io/verti4cal/tasmin` (see [DEVELOPMENT.md](DEVELOPMENT.md#releasing-a-new-image)).
+Save this as `docker-compose.yaml` and run `docker compose up -d` — no clone
+needed:
+
+```yaml
+services:
+  tasmin:
+    image: ghcr.io/verti4cal/tasmin:latest
+    ports:
+      - "3000:3000"
+    environment:
+      LOG_LEVEL: info
+      DEVICE_POLL_INTERVAL_MS: 30000
+      # Required to push firmware to devices — see Configuration below.
+      # OTA_URL_DOMAIN: 192.168.1.50:3000
+    volumes:
+      - tasmin-data:/data
+    restart: unless-stopped
+
+volumes:
+  tasmin-data:
+```
+
+Pin a specific version instead of always tracking `latest` by using an image
+tag like `ghcr.io/verti4cal/tasmin:1.2.3` (see [Configuration](#configuration)
+for what else is worth setting in `environment:`).
+
 Your data (devices, groups, backups, firmware builds, the cached Tasmota
 source) lives in a Docker volume (`tasmin-data`), so it survives restarts and
 rebuilds. Nothing is deleted unless you explicitly remove that volume.

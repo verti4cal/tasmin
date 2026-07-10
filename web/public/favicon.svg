@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#0891b2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- badge -->
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#bg)"/>
+
+  <!-- broadcast/OTA chevron, echoing Tasmota's upward signal arrow -->
+  <path d="M38,74 L64,46 L90,74" fill="none" stroke="#ffffff" stroke-width="12"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- smart device body -->
+  <rect x="42" y="78" width="44" height="30" rx="9" fill="#ffffff"/>
+  <circle cx="64" cy="93" r="6" fill="url(#bg)"/>
+</svg>
