@@ -1,0 +1,1 @@
+ALTER TABLE `firmware_builds` ADD `source` text DEFAULT 'compiled' NOT NULL;

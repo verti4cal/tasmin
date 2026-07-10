@@ -1,0 +1,1 @@
+ALTER TABLE `firmware_builds` ADD `binary_gz_filename` text;

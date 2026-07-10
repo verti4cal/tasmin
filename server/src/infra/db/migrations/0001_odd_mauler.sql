@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `device_state_device_id_key_idx` ON `device_state` (`device_id`,`key`);

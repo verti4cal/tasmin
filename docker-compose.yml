@@ -1,0 +1,14 @@
+services:
+  tasmin:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      LOG_LEVEL: info
+      DEVICE_POLL_INTERVAL_MS: 30000
+    volumes:
+      - tasmin-data:/data
+    restart: unless-stopped
+
+volumes:
+  tasmin-data:

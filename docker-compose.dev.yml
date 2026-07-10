@@ -1,0 +1,51 @@
+# Development stack: hot-reloading server + web, each in their own
+# container, sharing one dev image (Dockerfile.dev). Source is bind-mounted
+# from the host so edits are picked up immediately by tsx watch / Vite;
+# node_modules are named volumes so the bind mount doesn't shadow the
+# container's installed (and correctly-platformed) packages.
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    working_dir: /repo
+    command: sh -c "npm run db:migrate --workspace server && npm run dev --workspace server"
+    ports:
+      - "3000:3000"
+    environment:
+      LOG_LEVEL: debug
+      CORS_ORIGIN: http://localhost:5173
+      DB_PATH: /data/app.db
+      TASMOTA_SRC_DIR: /data/tasmota-src
+      FIRMWARE_OUTPUT_DIR: /data/firmware-builds
+      PLATFORMIO_CORE_DIR: /data/platformio-core
+    volumes:
+      - .:/repo
+      - root_node_modules:/repo/node_modules
+      - server_node_modules:/repo/server/node_modules
+      - web_node_modules:/repo/web/node_modules
+      - tasmin-dev-data:/data
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    working_dir: /repo
+    command: npm run dev --workspace web
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_DEV_API_TARGET: http://server:3000
+    volumes:
+      - .:/repo
+      - root_node_modules:/repo/node_modules
+      - server_node_modules:/repo/server/node_modules
+      - web_node_modules:/repo/web/node_modules
+    depends_on:
+      - server
+
+volumes:
+  root_node_modules:
+  server_node_modules:
+  web_node_modules:
+  tasmin-dev-data:
