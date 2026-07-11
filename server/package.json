@@ -18,7 +18,7 @@
     "@fastify/websocket": "^11.0.1",
     "better-sqlite3": "^11.5.0",
     "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.36.4",
+    "drizzle-orm": "^0.45.2",
     "fastify": "^5.1.0",
     "fastify-type-provider-zod": "^4.0.2",
     "mqtt": "^5.10.3",
