@@ -59,6 +59,7 @@ ENV TASMOTA_SRC_DIR=/data/tasmota-src
 ENV FIRMWARE_OUTPUT_DIR=/data/firmware-builds
 ENV PLATFORMIO_CORE_DIR=/data/platformio-core
 
+COPY version.json ./version.json
 COPY --from=server-deps /app/node_modules ./node_modules
 COPY --from=server-build /repo/server/package.json ./package.json
 COPY --from=server-build /repo/server/dist ./dist

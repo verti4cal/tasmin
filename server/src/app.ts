@@ -28,6 +28,7 @@ import { PrebuiltNotFoundError, setPrebuiltLogger } from "./infra/firmware/prebu
 import { setTasmotaLogger, TasmotaHttpError } from "./infra/tasmota/client.js";
 import type { Db } from "./infra/db/client.js";
 import { registerStaticFrontend } from "./plugins/staticFrontend.js";
+import { appVersion } from "./version.js";
 import { WsGateway } from "./ws/gateway.js";
 
 export async function buildApp(db: Db) {
@@ -68,6 +69,7 @@ export async function buildApp(db: Db) {
   });
 
   app.get("/api/health", async () => ({ status: "ok" }));
+  app.get("/api/version", async () => ({ version: appVersion }));
   app.register(deviceRoutes, { prefix: "/api/devices", devices: deviceService });
   app.register(backupRoutes, { prefix: "/api/devices", backups: backupService });
   app.register(ruleRoutes, { prefix: "/api/devices", rules: ruleService });

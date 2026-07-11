@@ -140,10 +140,19 @@ which builds the production `Dockerfile` for `linux/amd64` and `linux/arm64`
 and pushes it to GHCR as `ghcr.io/verti4cal/tasmin`, tagged `1.2.3`, `1.2`,
 `1`, and `latest`.
 
+The app's own version — shown in the footer of every page, served from
+`GET /api/version` — is tracked in [`version.json`](version.json) at the
+repo root. `make version` bumps it, commits, and pushes the matching tag in
+one step:
+
 ```bash
-git tag v1.2.3
-git push origin v1.2.3
+make version 1.2.3
 ```
+
+That's the same as, in order: editing `version.json`, `git commit`, `git
+push origin main`, `git tag v1.2.3`, `git push origin v1.2.3`. It refuses to
+run with uncommitted changes in the tree, or from any branch other than
+`main`.
 
 Ordinary commits/pushes to `main` don't publish anything — only a matching
 tag does. The workflow can also be re-run manually from the Actions tab
