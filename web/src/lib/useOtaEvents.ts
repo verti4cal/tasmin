@@ -8,7 +8,11 @@ export interface OtaStatusEvent {
 
 export interface OtaDeviceEvent {
   type: "ota.device";
-  payload: { deviceId: number; status: "pushing" | "verifying" | "success" | "failed"; error?: string };
+  payload: {
+    deviceId: number;
+    status: "backing-up" | "pushing" | "verifying" | "success" | "failed";
+    error?: string;
+  };
 }
 
 type OtaEvent = OtaStatusEvent | OtaDeviceEvent;

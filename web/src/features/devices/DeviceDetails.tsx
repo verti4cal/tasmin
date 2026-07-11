@@ -119,10 +119,13 @@ function RuleEditor({ deviceId }: { deviceId: number }) {
   );
 }
 
+const BACKUPS_PER_PAGE = 10;
+
 function BackupManager({ deviceId }: { deviceId: number }) {
   const [backups, setBackups] = useState<ConfigBackup[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
 
   const load = useCallback(async () => {
     try {
@@ -167,6 +170,13 @@ function BackupManager({ deviceId }: { deviceId: number }) {
     await load();
   }
 
+  const pageCount = Math.max(1, Math.ceil(backups.length / BACKUPS_PER_PAGE));
+  const currentPage = Math.min(page, pageCount - 1);
+  const pageItems = backups.slice(
+    currentPage * BACKUPS_PER_PAGE,
+    currentPage * BACKUPS_PER_PAGE + BACKUPS_PER_PAGE,
+  );
+
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
@@ -184,12 +194,12 @@ function BackupManager({ deviceId }: { deviceId: number }) {
       {backups.length === 0 && <p className="text-sm text-gray-500">No backups yet.</p>}
 
       <ul className="space-y-1">
-        {backups.map((backup) => (
-          <li key={backup.id} className="flex items-center justify-between text-sm">
-            <span className="truncate">
+        {pageItems.map((backup) => (
+          <li key={backup.id} className="flex flex-wrap items-center justify-between gap-2 text-sm">
+            <span className="truncate min-w-0 flex-1">
               {backup.filename} ({Math.round(backup.sizeBytes / 1024)} KB)
             </span>
-            <span className="flex gap-2">
+            <span className="flex flex-wrap gap-2">
               <a
                 href={backupsApi.downloadUrl(deviceId, backup.id)}
                 className="px-2 py-0.5 border rounded hover:bg-gray-50"
@@ -213,6 +223,28 @@ function BackupManager({ deviceId }: { deviceId: number }) {
           </li>
         ))}
       </ul>
+
+      {pageCount > 1 && (
+        <div className="flex items-center justify-between mt-2 text-sm text-gray-600">
+          <button
+            onClick={() => setPage(currentPage - 1)}
+            disabled={currentPage === 0}
+            className="px-2 py-0.5 border rounded hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage + 1} of {pageCount}
+          </span>
+          <button
+            onClick={() => setPage(currentPage + 1)}
+            disabled={currentPage >= pageCount - 1}
+            className="px-2 py-0.5 border rounded hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

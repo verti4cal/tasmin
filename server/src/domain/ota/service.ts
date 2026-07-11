@@ -1,5 +1,6 @@
 import { runWithConcurrency } from "../../infra/util/concurrency.js";
 import type { Broadcaster } from "../broadcaster.js";
+import type { BackupService } from "../devices/backupService.js";
 import type { BuildQueue } from "../firmware/queue.js";
 
 const DEFAULT_CONCURRENCY = 3;
@@ -16,6 +17,7 @@ export class OtaService {
 
   constructor(
     private readonly buildQueue: BuildQueue,
+    private readonly backupService: BackupService,
     private readonly broadcaster?: Broadcaster,
   ) {}
 
@@ -26,7 +28,7 @@ export class OtaService {
   async pushToDevices(
     buildId: number,
     deviceIds: number[],
-    { compressed = false }: { compressed?: boolean } = {},
+    { compressed = false, backupFirst = true }: { compressed?: boolean; backupFirst?: boolean } = {},
   ): Promise<void> {
     this.running = true;
     this.broadcaster?.broadcast({
@@ -36,8 +38,18 @@ export class OtaService {
 
     try {
       await runWithConcurrency(deviceIds, DEFAULT_CONCURRENCY, async (deviceId) => {
-        this.broadcaster?.broadcast({ type: "ota.device", payload: { deviceId, status: "pushing" } });
         try {
+          if (backupFirst) {
+            this.broadcaster?.broadcast({ type: "ota.device", payload: { deviceId, status: "backing-up" } });
+            try {
+              await this.backupService.create(deviceId);
+            } catch {
+              // Best-effort: a failed backup shouldn't block the update itself —
+              // it just means there's no fresh config snapshot for this device.
+            }
+          }
+
+          this.broadcaster?.broadcast({ type: "ota.device", payload: { deviceId, status: "pushing" } });
           await this.buildQueue.pushToDevice(buildId, deviceId, {
             compressed,
             onProgress: (status) => this.broadcaster?.broadcast({ type: "ota.device", payload: { deviceId, status } }),

@@ -46,7 +46,7 @@ export async function buildApp(db: Db) {
   const presetService = new PresetService(db);
   const tagService = new TagService();
   const scanService = new ScanService(deviceService, wsGateway);
-  const otaService = new OtaService(buildQueue, wsGateway);
+  const otaService = new OtaService(buildQueue, backupService, wsGateway);
   await buildQueue.init();
 
   app.register(cors, { origin: config.corsOrigin ?? true });

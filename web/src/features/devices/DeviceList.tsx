@@ -103,12 +103,19 @@ export function DeviceList({ groups }: DeviceListProps) {
 
           return (
             <li key={device.id} className="px-4 py-2">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <p className="font-medium">{device.name}</p>
-                  <p className="text-sm text-gray-500">{device.host}</p>
+                  <a
+                    href={`http://${device.host}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-gray-500 hover:underline"
+                  >
+                    {device.host}
+                  </a>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   {power && (
                     <span
                       className={`text-xs font-semibold px-2 py-0.5 rounded-full ${

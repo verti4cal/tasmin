@@ -51,7 +51,12 @@ export function App() {
       {tab === "devices" && <DeviceList groups={groups} />}
       {tab === "groups" && <GroupBar groups={groups} onGroupsChanged={reloadGroups} />}
       {tab === "firmware" && <FirmwareView />}
-      {tab === "ota" && <OtaView />}
+      {/* Kept mounted (instead of conditionally rendered like the other tabs) so an
+          in-progress or just-finished update's per-device status isn't lost when
+          switching tabs — only starting a new push resets it. */}
+      <div className={tab === "ota" ? "" : "hidden"}>
+        <OtaView active={tab === "ota"} />
+      </div>
     </main>
   );
 }

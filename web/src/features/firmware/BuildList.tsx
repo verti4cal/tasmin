@@ -47,39 +47,43 @@ export function BuildList({ builds, onBuildsChanged }: BuildListProps) {
 
         return (
           <li key={build.id} className="px-4 py-2">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <p className="font-medium">
                   {build.env} <span className="text-gray-500 font-normal">@ {build.baseVersion}</span>
                 </p>
                 <p className="text-xs text-gray-500">{build.createdAt}</p>
               </div>
-              <div className="flex items-center gap-2">
-                {build.presetName && (
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">
-                    preset: {build.presetName}
+              <div className="flex flex-col items-end gap-2 ml-auto">
+                <div className="flex flex-wrap items-center gap-2">
+                  {build.presetName && (
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">
+                      preset: {build.presetName}
+                    </span>
+                  )}
+                  {build.source === "prebuilt" && (
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">
+                      prebuilt
+                    </span>
+                  )}
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${STATUS_STYLES[status]}`}>
+                    {status}
                   </span>
-                )}
-                {build.source === "prebuilt" && (
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">
-                    prebuilt
-                  </span>
-                )}
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${STATUS_STYLES[status]}`}>
-                  {status}
-                </span>
-                <button
-                  onClick={() => setExpandedId(isExpanded ? null : build.id)}
-                  className="px-2 py-1 text-sm border rounded hover:bg-gray-50"
-                >
-                  {isExpanded ? "Hide details" : "Details"}
-                </button>
-                <button
-                  onClick={() => handleDelete(build)}
-                  className="px-2 py-1 text-sm border rounded text-red-600 hover:bg-red-50"
-                >
-                  Delete
-                </button>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={() => setExpandedId(isExpanded ? null : build.id)}
+                    className="px-2 py-1 text-sm border rounded hover:bg-gray-50"
+                  >
+                    {isExpanded ? "Hide details" : "Details"}
+                  </button>
+                  <button
+                    onClick={() => handleDelete(build)}
+                    className="px-2 py-1 text-sm border rounded text-red-600 hover:bg-red-50"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
 
