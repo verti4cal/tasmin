@@ -5,6 +5,7 @@ import { groupsApi } from "../features/groups/api.js";
 import { GroupBar } from "../features/groups/GroupBar.js";
 import type { DeviceGroup } from "../features/groups/types.js";
 import { OtaView } from "../features/ota/OtaView.js";
+import { Footer } from "./Footer.js";
 
 type Tab = "devices" | "groups" | "firmware" | "ota";
 
@@ -57,6 +58,8 @@ export function App() {
       <div className={tab === "ota" ? "" : "hidden"}>
         <OtaView active={tab === "ota"} />
       </div>
+
+      <Footer />
     </main>
   );
 }
