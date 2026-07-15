@@ -9,13 +9,26 @@ import {
 } from "./buildFlags.js";
 import type { BuildPreset, CreateBuildInput } from "./types.js";
 
-const COMMON_ENVS = [
+const ESP8266_ENVS = [
   "tasmota",
   "tasmota-minimal",
   "tasmota-sensors",
   "tasmota-ir",
   "tasmota-display",
   "tasmota-zbbridge",
+];
+
+const ESP32_ENVS = [
+  "tasmota32",
+  "tasmota32solo1",
+  "tasmota32s2",
+  "tasmota32c3",
+  "tasmota32c6",
+  "tasmota32s3",
+  "tasmota32-bluetooth",
+  "tasmota32-display",
+  "tasmota32-ir",
+  "tasmota32-webcam",
 ];
 
 interface BuildFormProps {
@@ -204,11 +217,20 @@ export function BuildForm({ presets, onBuildCreated, onPresetsChanged }: BuildFo
               onChange={(e) => setEnv(e.target.value)}
               required
             >
-              {COMMON_ENVS.map((name) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
-              ))}
+              <optgroup label="ESP8266">
+                {ESP8266_ENVS.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="ESP32">
+                {ESP32_ENVS.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </optgroup>
             </select>
           </div>
         </div>
